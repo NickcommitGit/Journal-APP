@@ -1,10 +1,12 @@
 package com.example.taskmanager.controller;
 
+import com.example.taskmanager.apiResponse.WeatherResponse;
 import com.example.taskmanager.entity.JournalEntry;
 import com.example.taskmanager.entity.User;
 import com.example.taskmanager.repository.UserRepository;
 import com.example.taskmanager.service.JournalEntryService;
 import com.example.taskmanager.service.UserService;
+import com.example.taskmanager.service.WeatherService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -28,7 +30,8 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
-
+    @Autowired
+    private WeatherService weatherService;
 
     @PutMapping
     public ResponseEntity<?> updateUser(@RequestBody User user){
@@ -56,7 +59,12 @@ public class UserController {
     @GetMapping
     public ResponseEntity<?> greetings(){
         Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
-        return new ResponseEntity<>("Hi"+ authentication.getName(),HttpStatus.NO_CONTENT);
+        WeatherResponse weatherResponse= weatherService.getWeather("Delhi");
+        String greetings="";
+        if(weatherResponse!=null){
+            greetings="weather feels like"+weatherResponse.getCurrent().getFeelsLikeC();
+        }
+        return new ResponseEntity<>("Hi"+ authentication.getName()+greetings,HttpStatus.NO_CONTENT);
     }
 
 }
