@@ -30,8 +30,7 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private WeatherService weatherService;
+
 
     @PutMapping
     public ResponseEntity<?> updateUser(@RequestBody User user){
@@ -56,15 +55,6 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @GetMapping
-    public ResponseEntity<?> greetings(){
-        Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
-        WeatherResponse weatherResponse= weatherService.getWeather("Delhi");
-        String greetings="";
-        if(weatherResponse!=null){
-            greetings="weather feels like"+weatherResponse.getCurrent().getFeelsLikeC();
-        }
-        return new ResponseEntity<>("Hi"+ authentication.getName()+greetings,HttpStatus.NO_CONTENT);
-    }
+
 
 }
